@@ -1,37 +1,57 @@
-<div class="hearts" id="hearts"></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>💌 Valentine?</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
 
-<div class="card">
-  <img class="gif" id="gif"
-    src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
-    alt="cute gif" />
+<body>
+  <div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
 
-  <h1 id="title">Will you be my Valentine? 💘</h1>
-  <p id="subtitle">Be honest… but choose wisely 😌</p>
+  <main class="card">
+    <img class="gif" id="gif"
+      src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
+      alt="cute gif" />
 
-  <div class="btns" id="btnRow">
-    <button id="yes">Yes! 💖</button>
-    <button id="no">No 🙃</button>
-  </div>
+    <h1 id="title">Will you be my Valentine? 💘</h1>
+    <p id="subtitle">Be honest… but choose wisely 😌</p>
 
-  <div class="msg" id="msg">YAYYY!! 🥰</div>
+    <div id="countdown" class="countdown"></div>
 
-  <!-- After-Yes options -->
-  <div id="afterYes" style="display:none; margin-top:16px;">
-    <p style="margin: 0 0 10px; font-weight:700;">Pick our plan 👇</p>
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button class="plan" data-plan="Dinner 🍝">Dinner 🍝</button>
-      <button class="plan" data-plan="Movie 🎬">Movie 🎬</button>
-      <button class="plan" data-plan="Dessert 🍰">Dessert 🍰</button>
-      <button class="plan" data-plan="Surprise 😈">Surprise 😈</button>
+    <div class="btns" id="btnRow">
+      <button id="yes">Yes! 💖</button>
+      <button id="no">No 🙃</button>
     </div>
 
-    <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button id="copyMsg" style="background:#111; color:#fff;">Copy message 📋</button>
-      <button id="reset" style="background:#fff; border:1px solid #00000012;">Reset 🔄</button>
+    <div class="msg" id="msg">YAYYY!! 🥰</div>
+
+    <section id="afterYes" class="after-yes" aria-live="polite">
+      <p class="pick">Pick our plan 👇</p>
+
+      <div class="plans">
+        <button class="plan" data-plan="Dinner 🍝">Dinner 🍝</button>
+        <button class="plan" data-plan="Movie 🎬">Movie 🎬</button>
+        <button class="plan" data-plan="Dessert 🍰">Dessert 🍰</button>
+        <button class="plan" data-plan="Surprise 😈">Surprise 😈</button>
+      </div>
+
+      <div class="actions">
+        <button id="copyMsg" class="dark">Copy message 📋</button>
+        <button id="reset" class="ghost">Reset 🔄</button>
+      </div>
+
+      <p id="finalText" class="final"></p>
+    </section>
+
+    <div class="footer">
+      Personalized link example:
+      <b>?to=Akanksha&from=Aditya</b>
     </div>
+  </main>
 
-    <p id="finalText" style="margin-top:12px; font-weight:700;"></p>
-  </div>
-
-  <div class="footer">Tip: you can send a personalized link like <b>?to=Name&from=Name</b></div>
-</div>
+  <script src="./script.js"></script>
+</body>
+</html>
