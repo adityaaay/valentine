@@ -11,17 +11,21 @@
   <div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
   <div class="hearts" id="hearts" aria-hidden="true"></div>
 
-  <main class="card">
-    <img class="gif" id="gif"
+  <main class="card" role="main">
+    <img
+      class="gif"
+      id="gif"
       src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"
-      alt="cute gif" />
+      alt="Cute animated gif"
+      loading="lazy"
+    />
 
     <h1 id="title">Will you be my Valentine? 💘</h1>
     <p id="subtitle">Be honest… but choose wisely 😌</p>
 
-    <div id="countdown" class="countdown"></div>
+    <div id="countdown" class="countdown" aria-live="polite"></div>
 
-    <div class="btns" id="btnRow">
+    <div class="btns">
       <button id="yes">Yes! 💖</button>
       <button id="no">No 🙃</button>
     </div>
@@ -36,11 +40,6 @@
         <button class="plan" data-plan="Movie 🎬">Movie 🎬</button>
         <button class="plan" data-plan="Dessert 🍰">Dessert 🍰</button>
         <button class="plan" data-plan="Surprise 😈">Surprise 😈</button>
-      </div>
-
-      <div class="actions">
-        <button id="copyMsg" class="dark">Copy message 📋</button>
-        <button id="reset" class="ghost">Reset 🔄</button>
       </div>
 
       <p id="finalText" class="final"></p>
