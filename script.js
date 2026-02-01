@@ -80,7 +80,7 @@ function onYes(restoring){
   subtitle.textContent = "Now it’s official.";
   msg.style.display = "block";
   afterYes.style.display = "block";
-  gif.src = "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif";
+  gif.src = "https://c.tenor.com/X-jA_vmTHUYAAAAd/tenor.gif";
 
   popHearts(30);
   no.disabled = true;
