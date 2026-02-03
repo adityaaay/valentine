@@ -1,56 +1,457 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>💌 Valentine?</title>
-  <link rel="stylesheet" href="./styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Eternal Love ❤️</title>
+    <!-- Luxury Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #ff4d6d;
+            --gold: #d4af37;
+            --beige-bg: #f7ebe1; /* Elegant Beige */
+            --pink-card: #ffcad4; /* Romantic Pink */
+            --dark-text: #4a0e1c;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 10px; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--beige-bg); /* Global Beige Background */
+            color: var(--dark-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; 
+            padding: 15px;
+        }
+
+        /* Fireworks Canvas (Slide 2 only) */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+            background: transparent; 
+        }
+
+        /* Petal Layer (Slide 1, 3, 4, 5, 6, 7) */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .petal {
+            position: absolute;
+            background: var(--rose);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.6;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Pink Container */
+        .container {
+            width: 100%;
+            max-width: 1200px; 
+            height: 90vh; 
+            background: var(--pink-card); /* Themed Pink Card */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow-y: auto; 
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(74, 14, 28, 0.15);
+            display: block; 
+        }
+
+        .page { display: none; width: 100%; }
+
+        /* Centering Fixes */
+        .active { 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            min-height: 100%; padding-top: 20px; padding-bottom: 50px; animation: fadeIn 0.8s ease; 
+        }
+
+        #page1.active, #pageFinal.active, #pageProposeDay.popup-active {
+            justify-content: center; padding-top: 0;
+        }
+
+        .popup-active { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100%; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.4); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 4rem); color: var(--dark-text); margin-bottom: 1.5rem; width: 100%; }
+        .romantic-text { font-size: 1.2rem; font-weight: 400; line-height: 1.6; max-width: 750px; margin-bottom: 2rem; color: #6d1a2d; padding-top: 10px; }
+
+        .main-gif {
+            width: 250px; height: 250px; border-radius: 40px; margin-bottom: 2rem;
+            object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-shrink: 0;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-wrap {
+            display: flex; justify-content: center; align-items: center; gap: 2.5rem;
+            min-height: 140px; position: relative; width: 100%;
+        }
+
+        .btn {
+            padding: 18px 50px; border-radius: 100px; border: none; font-size: 1.1rem;
+            font-weight: 600; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase; letter-spacing: 2px; 
+        }
+
+        #yesBtn { background: red; color: white; z-index: 100; position: relative; }
+        #noBtn { background: blue; color: white; z-index: 10; }
+
+        /* --- DASHBOARD GIF CARDS --- */
+        .selection-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; margin-top: 20px;
+        }
+
+        .col-card {
+            background: rgba(255, 255, 255, 0.4); padding: 40px 20px; border-radius: 35px;
+            border: 1px solid rgba(255,255,255,0.6); cursor: pointer; transition: 0.4s;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+
+        .col-card:hover { background: white; transform: translateY(-10px); border-color: var(--rose); }
+        .gif-icon { width: 110px; height: 110px; object-fit: contain; border-radius: 20px; }
+        .col-card h3 { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--dark-text); }
+
+        /* --- GALLERY: 16:9 & HOVER --- */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; padding: 20px 0 50px 0;
+        }
+
+        .polaroid {
+            background: beige; padding: 15px 15px 40px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: rotate(var(--r)); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .polaroid:hover { transform: rotate(0deg) scale(1.05); z-index: 25; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+
+        .polaroid img { 
+            width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 15px; border: 1px solid #f9f9f9;
+        }
+
+        .photo-caption { font-family: 'Roboto', cursive; color: #222; font-size: 1.8rem; }
+
+        /* --- QUIZ --- */
+        .quiz-container {
+            width: 100%; max-width: 600px; background: rgba(255,255,255,0.3);
+            padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .quiz-question { font-size: 1.5rem; margin-bottom: 20px; color: var(--dark-text); font-family: 'Playfair Display', serif; }
+
+        .quiz-option {
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.5); background: white;
+            color: var(--dark-text); cursor: pointer; transition: 0.3s; font-size: 1.1rem; font-weight: 500;
+        }
+
+        .quiz-option:hover { background: var(--rose); color: white; }
+        #quiz-feedback { margin-top: 15px; font-weight: 600; color: var(--rose); min-height: 24px; }
+
+        /* Letter */
+        .letter-paper {
+            background: beige; color: #222; padding: 50px; border-radius: 5px;
+            font-family: 'Roboto', cursive; font-size: 1.2rem; text-align: left;
+            max-width: 700px; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            margin-top: 30px; background: red; color: white; padding: 18px 50px;
+            border-radius: 100px; border: none; cursor: pointer; text-transform: uppercase; font-weight: 600;
+        }
+
+        .heart-burst {
+            position: fixed; top: 50%; left: 50%; width: 0; height: 0; background: var(--rose);
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none; display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .selection-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .container { height: 92vh; padding: 30px 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .polaroid { transform: rotate(0deg) !important; padding-bottom: 25px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
-  <div class="hearts" id="hearts" aria-hidden="true"></div>
 
-  <main class="card" role="main">
-    <img
-      class="gif"
-      id="gif"
-      src="https://c.tenor.com/y6LthaDam3gAAAAC/tenor.gif"
-      alt="Cute animated gif"
-      loading="lazy"
-    />
+    <div class="bg-animation" id="bgAnim"></div>
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="heart-burst" id="burst"></div>
 
-    <h1 id="title">Will you be my Valentine? 💘</h1>
-    <p id="subtitle">Be honest… but choose wisely 😌</p>
+    <div class="container">
+        
+        <!-- PAGE 1: PROPOSAL -->
+        <div id="page1" class="page active">
+            <img id="mainGif" class="main-gif" src="https://media1.tenor.com/m/-AhMs4U_wroAAAAC/kiss.gif">
+            <h1>Will you be mine pussy 🥺?</h1>
+            <p class="romantic-text">I want to spend every single second of the rest of my life with you. 🥹</p>
+            <div class="btn-wrap">
+                <button class="btn" id="yesBtn" onclick="openProposeDay()">YES</button>
+                <button class="btn" id="noBtn" onclick="handleNo()">No</button>
+            </div>
+        </div>
 
-    <div id="countdown" class="countdown" aria-live="polite"></div>
+        <!-- PAGE 2: HAPPY PROPOSE DAY (Petals stop here automatically) -->
+        <div id="pageProposeDay" class="page">
+            <img class="main-gif" src="https://media.tenor.com/qSGlyWc8uv8AAAAi/peach-goma-kiss-peach-and-goma.gif">
+            <h1 style="color: black;">Happy  Valentine Baby! 💍</h1>
+            <p class="romantic-text">
+                Every second with my puku is a celebration. You are the spark that makes my world so much brighter!
+            </p>
+            <button class="nav-btn" onclick="nextPage('pageCards')">See My Gifts →</button>
+        </div>
 
-    <div class="btns">
-      <button id="yes">Yes! 💖</button>
-      <button id="no">No 🙃</button>
+        <!-- PAGE 3: DASHBOARD -->
+        <div id="pageCards" class="page">
+            <h1>Something for You</h1>
+            <div class="selection-grid">
+                <div class="col-card" onclick="nextPage('pageQuiz')">
+                    <img src="https://media.tenor.com/z7KOY2ormzoAAAAi/m.gif" class="gif-icon">
+                    <h3>Gift 1</h3>
+                    <p></p>
+                </div>
+                <div class="col-card" onclick="nextPage('pageLetter')">
+                    <img src=" https://media.tenor.com/2m4l360ccV4AAAAi/heart.gif" class="gif-icon">
+                    <h3>Gift 2</h3>
+                    <p></p>
+                </div>
+                <div class="col-card" onclick="nextPage('pageGallery')">
+                    <img src=" https://media.tenor.com/sIAClHy5cSEAAAAi/strawberry-shortcake.gif" class="gif-icon">
+                    <h3>Gift 3</h3>
+                    <p></p>
+                </div>
+            </div>
+            <button class="nav-btn" style="background:red; border:1px solid var(--rose); color:white;" onclick="triggerFinalTransition()">Finally... ✨</button>
+        </div>
+
+        <!-- PAGE: GALLERY -->
+        <div id="pageGallery" class="page">
+            <h1>How we have been through these 6 years 😂🙈
+</h1>
+            <div class="gallery-grid">
+                <div class="polaroid" style="--r:-3deg"><img src="1.jpeg"><p class="photo-caption">All dressed up 😍</p></div>
+                <div class="polaroid" style="--r:2deg"><img src="2.jpeg"><p class="photo-caption">Hottie in red saree 😘</p></div>
+                <div class="polaroid" style="--r:-4deg"><img src="3.jpeg"><p class="photo-caption">You just look so pretty in saree 🥹</p></div>
+                <div class="polaroid" style="--r:3deg"><img src="4.jpeg"><p class="photo-caption">I wanted only the best photos of us 🥰</p></div>
+                <div class="polaroid" style="--r:-4deg"><img src="5.jpeg"><p class="photo-caption">This one is also so good 💕</p></div>
+                <div class="polaroid" style="--r:3deg"><img src="6.jpeg"><p class="photo-caption">One with the brooklyn bridge ❤️</p></div>
+              
+    
+            </div>
+            <button class="nav-btn" onclick="nextPage('pageCards')">← Back</button>
+        </div>
+
+        <!-- PAGE: LETTER -->
+        <div id="pageLetter" class="page">
+            <h1>A Letter For You 🥺</h1>
+            <div class="letter-paper">
+                 My Puss♥️,<br><br>
+                
+            I just wanted to remind you how much you mean to me,
+
+            In all the chaos of life, you’re my calm, my constant, and my safest place. Even when you test my patience… I only fall deeper 😌
+
+            Every little thing about you—your strength, your kindness, the way you understand me—makes me grateful that I get to love you. 
+            
+            You are my calm, my chaos, and my sweetest habit,
+
+            The one presence my soul keeps reaching for, again and again.
+
+            For in every prayer I whisper, your name already lives within it…
+
+            And every wish I make quietly finds its way back to you ❤️
+
+            No matter what happens, my heart will always choose you.
+ <br><br>
+                Forever yours. ❤️
+            </div>
+            <button class="nav-btn" onclick="nextPage('pageCards')">← Back</button>
+        </div>
+
+        <!-- PAGE: QUIZ -->
+        <div id="pageQuiz" class="page">
+            <h1>Quiz for you 😚</h1>
+            <div class="quiz-container" id="quiz-box"></div>
+            <div id="quiz-feedback"></div>
+            <button class="nav-btn" onclick="nextPage('pageCards')">← Back</button>
+        </div>
+
+        <!-- PAGE: FINAL -->
+        <div id="pageFinal" class="page">
+               <h1>You are my forever 🧿💛
+</h1>
+
+       <video width="350" height="500" controls autoplay loop muted>
+  <source src="1.mp4" type="video/mp4">
+           
+            <p class="romantic-text">I love you more than words can say. 💛
+<br>
+                No matter where life takes us,
+my heart will always choose you.<br>
+Thank you for being my peace, my smile, my love.<br>
+ I loved you yesterday. I love you today. I will love you tomorrow .<br> You are my forever 💛🌏
+.
+            </p>
+        </div>
+
     </div>
 
-    <div class="msg" id="msg">YAYYY!! 🥰</div>
+    <script>
+        let currentActivePage = 'page1';
 
-    <section id="afterYes" class="after-yes" aria-live="polite">
-      <p class="pick">Pick our plan 👇</p>
+        // 1. Petals (Falling on Beige background)
+        function createPetal() {
+            if (currentActivePage === 'pageProposeDay') return;
+            const bg = document.getElementById('bgAnim');
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            const startX = Math.random() * 100;
+            const size = Math.random() * 15 + 10;
+            const duration = Math.random() * 4 + 4;
+            petal.style.left = startX + 'vw';
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+            petal.style.animationDuration = duration + 's';
+            bg.appendChild(petal);
+            setTimeout(() => petal.remove(), duration * 1000);
+        }
+        setInterval(createPetal, 300);
 
-      <div class="plans">
-        <button class="plan" data-plan="Dinner 🍝">Dinner 🍝</button>
-        <button class="plan" data-plan="Movie 🎬">Movie 🎬</button>
-        <button class="plan" data-plan="Dessert 🍰">Dessert 🍰</button>
-        <button class="plan" data-plan="Surprise 😈">Surprise 😈</button>
-      </div>
+        // 2. Stages for YES Button (Scales to cover NO on 4th click)
+        let noClicks = 0;
+        const gifs = [
+            "https://media.tenor.com/-9xLl1bsQ7cAAAAi/peach-cat-crying-peach-goma.gif",
+            "https://media.tenor.com/-9xLl1bsQ7cAAAAi/peach-cat-crying-peach-goma.gif",
+            "https://media.tenor.com/X0AU4rFwjYsAAAAi/mochi-cat-mad-cat.gif",
+            "https://media.tenor.com/ePDE3ZmpHwcAAAAi/beat-couple.gif",
+            "https://media.tenor.com/0v8Y1C_f-p0AAAAi/love-mocha.gif"
+        ];
 
-      <p id="finalText" class="final"></p>
-    </section>
+        function handleNo() {
+            noClicks++;
+            const yesBtn = document.getElementById('yesBtn');
+            const gif = document.getElementById('mainGif');
+            const noBtn = document.getElementById('noBtn');
+            const heading = document.querySelector('#page1 h1');
+            const texts = ["Will you be mine baby 🥺?", "Think again 😭", "Are you sure 😡?", "Like you have an option 🥱"];
+            if(noClicks < gifs.length) gif.src = gifs[noClicks];
+            if(noClicks < texts.length) heading.textContent = texts[noClicks];
+            const stages = [1.6, 2.8, 5, 45]; 
+            if(noClicks <= 4) yesBtn.style.transform = `scale(${stages[noClicks-1]})`;
+            if(noClicks >= 4) { noBtn.style.opacity = "0"; noBtn.style.pointerEvents = "none"; }
+        }
 
-    <div class="footer">
-      Personalized link example:
-      <b>?to=Akanksha&from=Aditya</b>
-    </div>
-  </main>
+        // 3. Quiz Logic
+        const questions = [
+            { q: "Who is the absolute 'Boss' in this relationship 😌?", a: ["Obviously You", "Me", "Your Mom"], correct: 2 },
+            { q: "What fights a lot in this relationship 😒?", a: ["Always You", "No One", "Me"], correct: 2 },
+            { q: "Where do I plan to spend the rest of my life 🥺?", a: ["Paris", "In Your Heart", "On Mars"], correct: 1 }
+        ];
+        let currentQ = 0;
 
-  <script src="./script.js"></script>
+        function renderQuiz() {
+            const box = document.getElementById('quiz-box');
+            if (currentQ >= questions.length) {
+                box.innerHTML = "<h3>Yay! You passed the test! You really love me! 😭❤️</h3>";
+                return;
+            }
+            const data = questions[currentQ];
+            box.innerHTML = `<p class="quiz-question">${data.q}</p>${data.a.map((opt, i) => `<button class="quiz-option" onclick="checkAnswer(${i})">${opt}</button>`).join('')}`;
+        }
+
+        function checkAnswer(index) {
+            const feedback = document.getElementById('quiz-feedback');
+            if (index === questions[currentQ].correct) {
+                feedback.innerText = "Correct! You're so smart! 😍";
+                setTimeout(() => { currentQ++; feedback.innerText = ""; renderQuiz(); }, 1000);
+            } else { feedback.innerText = "Ooho , please try again. 😜"; }
+        }
+        renderQuiz();
+
+        // 4. Fireworks Logic
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.vel = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
+                this.alpha = 1;
+            }
+            draw() { ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); }
+            update() { this.x += this.vel.x; this.y += this.vel.y; this.alpha -= 0.01; }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            particles.forEach((p, i) => { if (p.alpha <= 0) particles.splice(i, 1); else { p.update(); p.draw(); } });
+            if (Math.random() < 0.06) {
+                const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                const x = Math.random() * canvas.width; const y = Math.random() * canvas.height * 0.4;
+                for (let i = 0; i < 35; i++) particles.push(new Particle(x, y, color));
+            }
+            requestAnimationFrame(animateFireworks);
+        }
+
+        // 5. Navigation & Transition
+        function nextPage(id) {
+            currentActivePage = id;
+            const allPages = document.querySelectorAll('.page');
+            allPages.forEach(p => p.classList.remove('active', 'popup-active'));
+            const target = document.getElementById(id);
+            if(id === 'pageProposeDay') target.classList.add('popup-active'); else target.classList.add('active');
+            canvas.style.display = (id === 'pageProposeDay') ? 'block' : 'none';
+            document.querySelector('.container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openProposeDay() { nextPage('pageProposeDay'); animateFireworks(); }
+
+        function triggerFinalTransition() {
+            const burst = document.getElementById('burst');
+            burst.style.display = 'block';
+            burst.animate([{ width: '0', height: '0', opacity: 1 }, { width: '300vw', height: '300vw', opacity: 1 }], { duration: 1000, easing: 'ease-in-out', fill: 'forwards' });
+            setTimeout(() => {
+                nextPage('pageFinal');
+                burst.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1000, fill: 'forwards' });
+                setTimeout(() => burst.style.display = 'none', 1000);
+            }, 900);
+        }
+    </script>
 </body>
 </html>
